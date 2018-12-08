@@ -3,6 +3,8 @@ package com.mmall.util;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.mmall.exception.ParamException;
+import org.apache.commons.collections.MapUtils;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -45,6 +47,12 @@ public class BeanValidator {
             return validateList(Lists.asList(first,objects));
         }else{
             return validate(first,new Class[0]);
+        }
+    }
+    public static void voidcheck(Object param)throws ParamException {
+        Map<String,String> map=BeanValidator.validateObject(param);
+        if(MapUtils.isNotEmpty(map)){
+            throw  new ParamException(map.toString());
         }
     }
 }

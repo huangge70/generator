@@ -5,6 +5,7 @@ import com.mmall.exception.PermissionException;
 import com.mmall.param.TestVo;
 import com.mmall.util.BeanValidator;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -31,7 +32,7 @@ public class TestController {
         log.info("validate");
         try {
             Map<String,String> map= BeanValidator.validateObject(vo);
-            if(map!=null&&map.entrySet().size()>0){
+            if(MapUtils.isNotEmpty(map)){
                 for(Map.Entry<String,String> entry:map.entrySet()){
                     log.info("{}->{}",entry.getKey(),entry.getValue());
                     System.out.println(entry.getKey()+","+entry.getValue());

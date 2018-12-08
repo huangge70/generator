@@ -1,5 +1,6 @@
 package com.mmall.common;
 
+import com.mmall.exception.ParamException;
 import com.mmall.exception.PermissionException;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -19,7 +20,7 @@ public class SpringExceptionResolver implements HandlerExceptionResolver {
         String defaultMsg="System error";
         //请求json数据的请求全部以.json结尾，请求页面的请求全部以.page结尾
         if(url.endsWith(".json")){
-            if(e instanceof PermissionException){
+            if(e instanceof PermissionException||e instanceof ParamException){
               JsonData result=JsonData.fail(e.getMessage()) ;
               mv=new ModelAndView("jsonView",result.toMap());
             }else{
@@ -36,6 +37,6 @@ public class SpringExceptionResolver implements HandlerExceptionResolver {
             JsonData result=JsonData.fail(defaultMsg);
             mv=new ModelAndView("exception",result.toMap());
         }
-        return null;
+        return mv;
     }
 }
