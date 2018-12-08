@@ -1,5 +1,7 @@
 package com.mmall.controller;
 
+import com.mmall.common.JsonData;
+import com.mmall.exception.PermissionException;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,10 +14,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Slf4j
 public class TestController {
     private Logger log= LoggerFactory.getLogger(TestController.class);
-    @RequestMapping("/hello")
+    @RequestMapping("/hello.json")
     @ResponseBody
-    public String hello(){
+    public JsonData hello(){
         log.info("hello");
-        return "hello,world,huangge";
+        return JsonData.success("hello,permission");
     }
 }

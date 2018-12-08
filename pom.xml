@@ -98,6 +98,11 @@
       <artifactId>slf4j-api</artifactId>
       <version>1.7.22</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>jsp-api</artifactId>
+      <version>6.0.36</version>
+    </dependency>
   </dependencies>
 
   <build>
