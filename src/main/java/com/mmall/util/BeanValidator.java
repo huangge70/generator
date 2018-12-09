@@ -49,7 +49,7 @@ public class BeanValidator {
             return validate(first,new Class[0]);
         }
     }
-    public static void voidcheck(Object param)throws ParamException {
+    public static void check(Object param)throws ParamException {
         Map<String,String> map=BeanValidator.validateObject(param);
         if(MapUtils.isNotEmpty(map)){
             throw  new ParamException(map.toString());
