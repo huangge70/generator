@@ -1,11 +1,13 @@
 package com.mmall.service;
 
 import com.google.common.base.Preconditions;
+import com.mmall.common.RequestHolder;
 import com.mmall.dao.SysUserMapper;
 import com.mmall.exception.ParamException;
 import com.mmall.model.SysUser;
 import com.mmall.param.UserParam;
 import com.mmall.util.BeanValidator;
+import com.mmall.util.IpUtil;
 import com.mmall.util.MD5Util;
 import com.mmall.util.PasswordUtil;
 import org.springframework.stereotype.Service;
@@ -31,9 +33,9 @@ public class SysUserService {
         //对密码进行加密
         String encryptedPassword= MD5Util.encrypt(password);
         SysUser user=SysUser.builder().username(param.getUsername()).telephone(param.getTelephone()).mail(param.getMail()).password(encryptedPassword).deptId(param.getDeptId()).status(param.getStatus()).remark(param.getRemark()).build();
-        user.setOperator("system");
+        user.setOperator(RequestHolder.getCurrentUser().getUsername());
         user.setOperateTime(new Date());
-        user.setOperateIp("127.0.0.1");
+        user.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
         //TODO:sendEmail
         sysUserMapper.insertSelective(user);
     }
@@ -49,12 +51,19 @@ public class SysUserService {
         SysUser before=sysUserMapper.selectByPrimaryKey(param.getId());
         Preconditions.checkNotNull(before,"待更新的用户不存在");
         SysUser after=SysUser.builder().id(param.getId()).username(param.getUsername()).telephone(param.getTelephone()).mail(param.getMail()).password(before.getPassword()).deptId(param.getDeptId()).status(param.getStatus()).remark(param.getRemark()).build();
+        after.setOperator(RequestHolder.getCurrentUser().getUsername());
+        after.setOperateTime(new Date());
+        after.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
         sysUserMapper.updateByPrimaryKeySelective(after);
     }
     public boolean checkEmailExist(String mail,Integer userId){
-        return false;
+        return sysUserMapper.countByMail(mail,userId)>0;
     }
     public boolean checkTelephoneExist(String telephone,Integer userId){
-        return false;
+        return sysUserMapper.countByMail(telephone,userId)>0;
+    }
+
+    public SysUser findByKeyword(String keyword){
+        return sysUserMapper.findByKeyword(keyword);
     }
 }

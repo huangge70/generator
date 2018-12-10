@@ -39,5 +39,11 @@ public class HttpInterceptor extends HandlerInterceptorAdapter {
         String url=request.getRequestURI().toString();
         Map parameterMap=request.getParameterMap();
         log.info("url:{},param:{}",url, JsonMapper.obj2String(parameterMap));
+
+        removeThreadLocalInfo();
+    }
+
+    public void removeThreadLocalInfo(){
+        RequestHolder.remove();
     }
 }
