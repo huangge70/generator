@@ -31,6 +31,17 @@ public class SysTreeService {
     @Resource
     private SysAclMapper sysAclMapper;
 
+    public List<AclModuleLevelDto> userAclTree(int userId){
+        List<SysAcl> userAclList=sysCoreService.getUserAclList(userId);
+        List<AclDto> aclDtoList=Lists.newArrayList();
+        for(SysAcl acl:userAclList){
+            AclDto dto=AclDto.adapt(acl);
+            dto.setChecked(true);
+            dto.setHasAcl(true);
+            aclDtoList.add(dto);
+        }
+        return aclListToTree(aclDtoList);
+    }
     public List<AclModuleLevelDto> roleTree(int roleId){
         //取出当前用户已分配的权限点
         List<SysAcl> userAclList=sysCoreService.getCurrentUserAclList();
@@ -66,7 +77,8 @@ public class SysTreeService {
                 moduleIdAclMap.put(acl.getAclModuleId(),AclDto.adapt(acl));
             }
         }
-        bindAclsWithOrder();
+        bindAclsWithOrder(aclModuleLevelList,moduleIdAclMap);
+        return aclModuleLevelList;
     }
     public void bindAclsWithOrder(List<AclModuleLevelDto> aclModuleLevelList,Multimap<Integer,AclDto> moduleIdAclMap){
         if(CollectionUtils.isEmpty(aclModuleLevelList)){
@@ -189,6 +201,12 @@ public class SysTreeService {
     public Comparator<AclDto> aclSeqComparator=new Comparator<AclDto>() {
         @Override
         public int compare(AclDto a1, AclDto a2) {
+            return a1.getSeq()-a2.getSeq();
+        }
+    };
+    public Comparator<AclModuleLevelDto> aclModuleSeqComparator=new Comparator<AclModuleLevelDto>() {
+        @Override
+        public int compare(AclModuleLevelDto a1, AclModuleLevelDto a2) {
             return a1.getSeq()-a2.getSeq();
         }
     };

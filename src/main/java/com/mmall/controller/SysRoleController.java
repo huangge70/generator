@@ -3,7 +3,6 @@ package com.mmall.controller;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mmall.common.JsonData;
-import com.mmall.model.SysRole;
 import com.mmall.model.SysUser;
 import com.mmall.param.RoleParam;
 import com.mmall.service.SysRoleAclService;
