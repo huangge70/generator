@@ -1,7 +1,17 @@
 package com.mmall.model;
 
-import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
+import java.util.Date;
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+//指明对比两个sysacl对象相同的方法
+//定义为只要id相同就认为两个对象相同
+@EqualsAndHashCode(of = {"id"})
 public class SysAcl {
     private Integer id;
 
