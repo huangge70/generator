@@ -60,7 +60,6 @@ public class SysCoreService {
     }
 
     public boolean isSuperAdmin() {
-        // 这里是我自己定义了一个假的超级管理员规则，实际中要根据项目进行修改
         // 可以是配置文件获取，可以指定某个用户，也可以指定某个角色
         SysUser sysUser = RequestHolder.getCurrentUser();
         if (sysUser.getMail().contains("admin")) {
@@ -80,9 +79,9 @@ public class SysCoreService {
 
         List<SysAcl> userAclList = getCurrentUserAclListFromCache();
         Set<Integer> userAclIdSet = userAclList.stream().map(acl -> acl.getId()).collect(Collectors.toSet());
-
+        //标识符，看看遍历完成后是否有有效的权限点，如果url对应的权限点都无效，也就是说该url不需要访问权限
         boolean hasValidAcl = false;
-        // 规则：只要有一个权限点有权限，那么我们就认为有访问权限
+        // 定义自己的规则：只要有一个权限点有权限，那么我们就认为有访问权限
         for (SysAcl acl : aclList) {
             // 判断一个用户是否具有某个权限点的访问权限
             if (acl == null || acl.getStatus() != 1) { // 权限点无效
@@ -103,13 +102,16 @@ public class SysCoreService {
         int userId = RequestHolder.getCurrentUser().getId();
         String cacheValue = sysCacheService.getFromCache(CacheKeyConstants.USER_ACLS, String.valueOf(userId));
         if (StringUtils.isBlank(cacheValue)) {
+            //可能redis出现问题，我们调用以前的方法查出用户的权限
             List<SysAcl> aclList = getCurrentUserAclList();
             if (CollectionUtils.isNotEmpty(aclList)) {
+                //将权限列表保存到redis
                 sysCacheService.saveCache(JsonMapper.obj2String(aclList), 600, CacheKeyConstants.USER_ACLS, String.valueOf(userId));
             }
             return aclList;
         }
-        return JsonMapper.string2Obj(cacheValue, new TypeReference<List<SysAcl>>() {
+        return JsonMapper.string2Object(cacheValue, new TypeReference<List<SysAcl>>() {
         });
     }
+
 }
