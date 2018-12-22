@@ -155,4 +155,44 @@
       status = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="countBySearchDto" parameterType="map" resultType="int">
+    select count(1)
+    from sys_log
+    <include refid="queryCondition"/>
+  </select>
+
+  <select id="getPageListBySearchDto" parameterType="map" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from sys_log
+    <include refid="queryCondition"/>
+    order by operate_time desc
+    limit #{page.offset},#{page.pageSize}
+  </select>
+  
+  <sql id="queryCondition">
+    <where>
+      <if test="dto.type!=null">
+        and type=#{dto.type}
+      </if>
+      <if test="dto.beforeSeg!=null and dto.beforeSeg!=''">
+        and old_value like #{dto.beforeSeg}
+      </if>
+      <if test="dto.afterSeg!=null and dto.afterSeg!=''">
+        and new_value like #{dto.afterSeg}
+      </if>
+      <if test="dto.operator!=null and dto.operator!=''">
+        and operator like #{dto.operator}
+      </if>
+      <if test="dto.fromTime!=null">
+        and operate_time &gt;=#{dto.fromTime}
+      </if>
+      <if test="dto.toTime!=null">
+        and operate_time &lt;=#{dto.toTime}
+      </if>
+    </where>
+  </sql>
 </mapper>
