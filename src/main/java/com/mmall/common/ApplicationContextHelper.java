@@ -12,7 +12,7 @@ public class ApplicationContextHelper implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext context) throws BeansException {
         applicationContext=context;
     }
-    public static <T> T popBeab(Class<T> clazz){
+    public static <T> T popBean(Class<T> clazz){
         if(applicationContext==null){
             return null;
         }

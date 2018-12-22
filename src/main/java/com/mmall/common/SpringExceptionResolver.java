@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 @Slf4j
 public class SpringExceptionResolver implements HandlerExceptionResolver {
-    private Logger log=LoggerFactory.getLogger(SpringExceptionResolver.class);
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object o, Exception e) {
         String url=request.getRequestURL().toString();
